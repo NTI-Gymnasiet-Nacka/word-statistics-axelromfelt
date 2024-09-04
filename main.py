@@ -52,13 +52,39 @@ def most_frequent(text: list):
     #         dict[word] = 1
     # print(dict)
     # return max(dict, key=lambda word: dict[word])
-    old_count = 0
-    top_word = []
+    top_count = 0
+    top_word = ""
+    checked_words = []
     for word in text:
+        if word in checked_words:
+            continue
+        checked_words.append(word)
         count = 0
         for i in range(0, len(text)):
             if text[i] == word:
                 count += 1
+        if count > top_count:
+            top_word = word
+            top_count = count
+
+        elif count == top_count:
+            top_word += ", "+word
+
+    return top_word
+
+
+def average_length(text: list):
+    text = "".join(text)
+    text = text.replace("\n", " ")
+    for character in text[::-1]:
+        if character not in LETTERS:
+            text = text.replace(character, "")
+    text = text.lower().split()
+    text.sort()
+    total_length = 0
+    for word in text:
+        total_length += len(word)
+    return f"{total_length/len(text):.3f}"
 
 
 def main():
@@ -67,6 +93,7 @@ def main():
     sentences = read_from_file("en_resa_genom_svenska_skogen.txt")
     print(count_words(sentences))
     print(most_frequent(sentences))
+    print(average_length(sentences))
 
 
 if __name__ == "__main__":
